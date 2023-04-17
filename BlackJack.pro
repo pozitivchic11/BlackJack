@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     bet.cpp \
     main.cpp \
-    game.cpp
+    game.cpp \
+    player.cpp
 
 HEADERS += \
     bet.h \
-    game.h
+    game.h \
+    player.h
 
 FORMS += \
     betwindow.ui \
