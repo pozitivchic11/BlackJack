@@ -13,7 +13,7 @@ public:
     virtual void hitCard() = 0;
     virtual void stand() = 0;
 
-    static void setCardsDeck(QList<QPixmap> cardsDeck_);
+    static void setCardsDeck(const QList<QPixmap> cardsDeck_);
 
 protected:
     static QList<QPixmap>* cardsDeck;
@@ -30,8 +30,12 @@ public:
 
     QPixmap* getCard();
 
+    int getIndex();
+
 private:
     QPixmap* card;
+
+    int ind;
 };
 
 class Computer : public Player

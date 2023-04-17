@@ -29,8 +29,6 @@ protected:
     void paintEvent(QPaintEvent*) override;
     void timerEvent(QTimerEvent*) override;
 
-    bool checkHitButtonState();
-
 private slots:
     void on_chooseBetButton_clicked();
 
@@ -53,6 +51,9 @@ private:
 
     int cards_people_iter = 0;
     int cards_computer_iter = 0;
+
+    int peopleCountPoints = 0;
+    int computerCountPoints = 0;
 
     const int pCARDS_POS_X = 240;
     const int cCARDS_POS_X = 450;
@@ -82,6 +83,10 @@ private:
     void loadCardsDeck();
 
     int x = 0, y = 0;
+
+    void countPoints(const int, const QString);
+
+    bool checkHitButtonState();
 };
 
 #endif // GAME_H

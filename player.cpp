@@ -13,7 +13,7 @@ Player::~Player()
     }
 }
 
-void Player::setCardsDeck(QList<QPixmap> cardsDeck_)
+void Player::setCardsDeck(const QList<QPixmap> cardsDeck_)
 {
     *cardsDeck = cardsDeck_;
 }
@@ -28,17 +28,26 @@ People::~People() {
 }
 
 QPixmap* People::getCard() { return card; }
+int People::getIndex() { return ind; }
 
 void People::hitCard()
 {
     int ind = QRandomGenerator::global()->bounded(cardsDeck->size());
+
+    this->ind = ind;
 
     card = new QPixmap(cardsDeck->at(ind));
 
     cardsDeck->remove(ind, 1);
 }
 
-void People::stand()
+void People::stand() {}
+
+Computer::Computer() {}
+
+void Computer::hitCard()
 {
 
 }
+
+void Computer::stand() {}

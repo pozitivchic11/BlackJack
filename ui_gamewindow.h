@@ -42,6 +42,7 @@ public:
     QLabel *cardLabel;
     QComboBox *chooseCard;
     QLabel *labelDiscCards;
+    QLineEdit *peoplePoints;
 
     void setupUi(QWidget *Game)
     {
@@ -146,6 +147,14 @@ public:
         labelDiscCards->setToolTipDuration(-5);
         labelDiscCards->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
         labelDiscCards->setAlignment(Qt::AlignCenter);
+        peoplePoints = new QLineEdit(Game);
+        peoplePoints->setObjectName("peoplePoints");
+        peoplePoints->setEnabled(true);
+        peoplePoints->setGeometry(QRect(230, 140, 40, 25));
+        QFont font4;
+        font4.setFamilies({QString::fromUtf8("Rockwell Extra Bold")});
+        peoplePoints->setFont(font4);
+        peoplePoints->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         retranslateUi(Game);
 
