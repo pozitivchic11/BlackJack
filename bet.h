@@ -7,6 +7,7 @@
 #include <QSize>
 #include <QMessageBox>
 #include <QDir>
+#include <QSoundEffect>
 
 enum Chips{
     Chip_5,
@@ -42,6 +43,8 @@ private slots:
 
 private:
     Ui::Bet *ui;
+
+    QSoundEffect clickSound;
 
     Chips current_chip = NONE;
 };

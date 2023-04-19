@@ -10,150 +10,188 @@
     <x>0</x>
     <y>0</y>
     <width>360</width>
-    <height>180</height>
+    <height>183</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QPushButton" name="pushButton_chip5">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>110</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>images/pokerChips/chip_5.jpg</normaloff>images/pokerChips/chip_5.jpg</iconset>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>80</width>
-     <height>60</height>
-    </size>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_chip10">
-   <property name="geometry">
-    <rect>
-     <x>125</x>
-     <y>0</y>
-     <width>110</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>images/pokerChips/chip_10.jpg</normaloff>images/pokerChips/chip_10.jpg</iconset>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>80</width>
-     <height>60</height>
-    </size>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_chip25">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>0</y>
-     <width>110</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>images/pokerChips/chip_25.png</normaloff>images/pokerChips/chip_25.png</iconset>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>80</width>
-     <height>60</height>
-    </size>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_chip50">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>100</y>
-     <width>110</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>images/pokerChips/chip_50.png</normaloff>images/pokerChips/chip_50.png</iconset>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>80</width>
-     <height>80</height>
-    </size>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_chip100">
-   <property name="geometry">
-    <rect>
-     <x>125</x>
-     <y>100</y>
-     <width>110</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>images/pokerChips/chip_100.png</normaloff>images/pokerChips/chip_100.png</iconset>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>80</width>
-     <height>60</height>
-    </size>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_chip500">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>100</y>
-     <width>110</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>images/pokerChips/chip_500.png</normaloff>images/pokerChips/chip_500.png</iconset>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>80</width>
-     <height>60</height>
-    </size>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QPushButton" name="pushButton_chip5">
+     <property name="minimumSize">
+      <size>
+       <width>110</width>
+       <height>80</height>
+      </size>
+     </property>
+     <property name="sizeIncrement">
+      <size>
+       <width>5</width>
+       <height>5</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>images/pokerChips/chip_5.jpg</normaloff>images/pokerChips/chip_5.jpg</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>80</width>
+       <height>60</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="pushButton_chip10">
+     <property name="minimumSize">
+      <size>
+       <width>110</width>
+       <height>80</height>
+      </size>
+     </property>
+     <property name="sizeIncrement">
+      <size>
+       <width>5</width>
+       <height>5</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>images/pokerChips/chip_10.jpg</normaloff>images/pokerChips/chip_10.jpg</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>80</width>
+       <height>60</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QPushButton" name="pushButton_chip25">
+     <property name="minimumSize">
+      <size>
+       <width>110</width>
+       <height>80</height>
+      </size>
+     </property>
+     <property name="sizeIncrement">
+      <size>
+       <width>5</width>
+       <height>5</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>images/pokerChips/chip_25.png</normaloff>images/pokerChips/chip_25.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>80</width>
+       <height>60</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="pushButton_chip50">
+     <property name="minimumSize">
+      <size>
+       <width>110</width>
+       <height>80</height>
+      </size>
+     </property>
+     <property name="sizeIncrement">
+      <size>
+       <width>5</width>
+       <height>5</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>images/pokerChips/chip_50.png</normaloff>images/pokerChips/chip_50.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>80</width>
+       <height>80</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="pushButton_chip100">
+     <property name="minimumSize">
+      <size>
+       <width>110</width>
+       <height>80</height>
+      </size>
+     </property>
+     <property name="sizeIncrement">
+      <size>
+       <width>5</width>
+       <height>5</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>images/pokerChips/chip_100.png</normaloff>images/pokerChips/chip_100.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>80</width>
+       <height>60</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="pushButton_chip500">
+     <property name="minimumSize">
+      <size>
+       <width>110</width>
+       <height>80</height>
+      </size>
+     </property>
+     <property name="sizeIncrement">
+      <size>
+       <width>5</width>
+       <height>5</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>images/pokerChips/chip_500.png</normaloff>images/pokerChips/chip_500.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>80</width>
+       <height>60</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

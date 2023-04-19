@@ -43,6 +43,7 @@ public:
     QComboBox *chooseCard;
     QLabel *labelDiscCards;
     QLineEdit *peoplePoints;
+    QLineEdit *computerPoints;
 
     void setupUi(QWidget *Game)
     {
@@ -155,6 +156,9 @@ public:
         font4.setFamilies({QString::fromUtf8("Rockwell Extra Bold")});
         peoplePoints->setFont(font4);
         peoplePoints->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        computerPoints = new QLineEdit(Game);
+        computerPoints->setObjectName("computerPoints");
+        computerPoints->setGeometry(QRect(440, 140, 40, 25));
 
         retranslateUi(Game);
 

@@ -6,6 +6,9 @@ Bet::Bet(QWidget *parent) : QDialog(parent),ui(new Ui::Bet)
 {
     ui->setupUi(this);
 
+    clickSound.setSource(QUrl::fromLocalFile(QDir::currentPath() + "/sounds/choose_chip_button_click.wav"));
+    clickSound.setVolume(static_cast<float>(0.9));
+
     ui->pushButton_chip5->setIcon(QIcon(QDir::currentPath() + "/images/pokerChips/chip_5.jpg"));
     ui->pushButton_chip10->setIcon(QIcon(QDir::currentPath() + "/images/pokerChips/chip_10.jpg"));
     ui->pushButton_chip25->setIcon(QIcon(QDir::currentPath() + "/images/pokerChips/chip_25.png"));
@@ -35,36 +38,42 @@ Bet::~Bet()
 
 void Bet::onChipButton1()
 {
+    clickSound.play();
     current_chip = Chips::Chip_5;
     this->close();
 }
 
 void Bet::onChipButton2()
 {
+    clickSound.play();
     current_chip = Chips::Chip_10;
     this->close();
 }
 
 void Bet::onChipButton3()
 {
+    clickSound.play();
     current_chip = Chips::Chip_25;
     this->close();
 }
 
 void Bet::onChipButton4()
 {
+    clickSound.play();
     current_chip = Chips::Chip_50;
     this->close();
 }
 
 void Bet::onChipButton5()
 {
+    clickSound.play();
     current_chip = Chips::Chip_100;
     this->close();
 }
 
 void Bet::onChipButton6()
 {
+    clickSound.play();
     current_chip = Chips::Chip_500;
     this->close();
 }

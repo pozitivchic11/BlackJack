@@ -12,6 +12,8 @@ public:
 
     virtual void hitCard() = 0;
     virtual void stand() = 0;
+    virtual int getIndex() = 0;
+    virtual QPixmap* getCard() = 0;
 
     static void setCardsDeck(const QList<QPixmap> cardsDeck_);
 
@@ -28,9 +30,9 @@ public:
     void hitCard() override;
     void stand() override;
 
-    QPixmap* getCard();
+    int getIndex() override;
 
-    int getIndex();
+    QPixmap* getCard() override;
 
 private:
     QPixmap* card;
@@ -46,6 +48,15 @@ public:
 
     void hitCard() override;
     void stand() override;
+
+    int getIndex() override;
+
+    QPixmap* getCard() override;
+
+private:
+    QPixmap* card;
+
+    int ind;
 };
 
 #endif // PLAYER_H

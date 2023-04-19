@@ -6,15 +6,27 @@
 #include <QRandomGenerator>
 #include <QPainter>
 #include <QPair>
-#include <QTimer>
 #include <QDebug>
+#include <chrono>
+#include <thread>
+#include <QSoundEffect>
+#include <QUrl>
 
 #include "bet.h"
 #include "player.h"
+#include "computepoints.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Game; }
 QT_END_NAMESPACE
+
+enum class GameResult
+{
+    None,
+    PeopleVictory,
+    ComputerVictory,
+    Draw
+};
 
 class Game : public QWidget
 
@@ -25,9 +37,11 @@ public:
     Game(QWidget *parent = nullptr);
     ~Game();
 
+    static int getPeoplePoints();
+    static int getComputerPoints();
+
 protected:
     void paintEvent(QPaintEvent*) override;
-    void timerEvent(QTimerEvent*) override;
 
 private slots:
     void on_chooseBetButton_clicked();
@@ -44,25 +58,38 @@ private slots:
 
     void on_hitButton_clicked();
 
+    void on_standButton_clicked();
+
 private:
     Ui::Game *ui;
 
     bool game_state_button_clicked = false;
+    bool game_finished = false;
+    bool bot_hit = false;
+
+    int card_bg_ind = 1;
+
+    int temp_pCARDS_POS_X;
+    int temp_cCARDS_POS_X;
+
+    int temp_bet;
 
     int cards_people_iter = 0;
     int cards_computer_iter = 0;
-
-    int peopleCountPoints = 0;
-    int computerCountPoints = 0;
 
     const int pCARDS_POS_X = 240;
     const int cCARDS_POS_X = 450;
     const int CARDS_POS_Y = 180;
 
-    static int temp_pCARDS_POS_X;
-    static int temp_cCARDS_POS_X;
     static int BUDGET;
     static int BET;
+    static int peopleCountPoints;
+    static int computerCountPoints;
+
+    GameResult game_result;
+
+    QList<int> peopleEleven;
+    QList<int> computerEleven;
 
     QList<QString> cardsBackgroundList = { "firstVariant", "secondVariant.jpg", "thirdVariant.png", "fourthVariant.png" };
 
@@ -75,15 +102,20 @@ private:
     QList<QPair<int, int>> peopleCardsCoords;
     QList<QPair<int, int>> computerCardsCoords;
 
-    QList<QPair<int, int>> pPrimaryPos;
-    QList<QPair<int, int>> cPrimaryPos;
+    QSoundEffect clickSound;
 
     Bet* betWindow;
 
-    void loadCardsDeck();
+    Computer* computer;
+
+    ComputePoints* peoplePoints;
+    ComputePoints* computerPoints;
 
     int x = 0, y = 0;
 
+    void loadCardsDeck();
+    void checkGameResult();
+    void restartGame();
     void countPoints(const int, const QString);
 
     bool checkHitButtonState();

@@ -5,6 +5,14 @@ Game::Game(QWidget *parent) : QWidget(parent), ui(new Ui::Game)
 {
     ui->setupUi(this);
 
+    clickSound.setSource(QUrl::fromLocalFile(QDir::currentPath() + "/sounds/game_buttons_click.wav"));
+    clickSound.setVolume(static_cast<float>(0.9));
+
+    computer = new Computer();
+
+    peoplePoints = new ComputePoints();
+    computerPoints = new ComputePoints();
+
     ui->pocketLineEdit->setEnabled(false);
     ui->startButton->setEnabled(false);
     ui->hitButton->setEnabled(false);
@@ -16,6 +24,7 @@ Game::Game(QWidget *parent) : QWidget(parent), ui(new Ui::Game)
     ui->chooseCard->addItem("RedBg");
 
     ui->peoplePoints->setVisible(false);
+    ui->computerPoints->setVisible(false);
 
     ui->chooseCard->setCurrentIndex(1);
 
@@ -103,12 +112,25 @@ void Game::loadCardsDeck()
 
 void Game::on_chooseBetButton_clicked()
 {
+    clickSound.play();
     betWindow->setModal(true);
     betWindow->exec();
 }
 
 void Game::on_betButton_clicked()
 {
+    clickSound.play();
+
+    ui->peoplePoints->setVisible(false);
+
+    peopleCountPoints = 0;
+    computerCountPoints = 0;
+
+    temp_peopleCardsDeck.clear();
+    temp_computerCardsDeck.clear();
+    peopleCardsCoords.clear();
+    computerCardsCoords.clear();
+
     int reply;
 
     if(BET != 0) {
@@ -130,7 +152,7 @@ void Game::on_betButton_clicked()
             ui->chooseBetButton->setEnabled(false);
             ui->incrementButton->setEnabled(false);
             ui->decrementButton->setEnabled(false);
-
+            ui->computerPoints->setVisible(false);
             ui->startButton->setEnabled(true);
         }
         else {
@@ -141,6 +163,8 @@ void Game::on_betButton_clicked()
 
 void Game::on_incrementButton_clicked()
 {
+    clickSound.play();
+
     int temp;
 
     if(betWindow->getCurrentChip() != Chips::NONE){
@@ -173,6 +197,7 @@ void Game::on_incrementButton_clicked()
         }
 
         BET += temp;
+        temp_bet = BET;
         ui->chooseBetButton->setText(QString::number(BET) + "$");
     }
     else { QMessageBox::information(this, "Bet", "Choose your chip!"); }
@@ -180,6 +205,8 @@ void Game::on_incrementButton_clicked()
 
 void Game::on_decrementButton_clicked()
 {
+    clickSound.play();
+
     int temp;
 
     if(betWindow->getCurrentChip() != Chips::NONE){
@@ -219,7 +246,12 @@ void Game::on_decrementButton_clicked()
 
 void Game::on_chooseCard_currentIndexChanged(int index)
 {
+    clickSound.play();
+
     ui->cardLabel->setPixmap(QPixmap(QDir::currentPath() + "/images/backCardsView/" + cardsBackgroundList[index]).scaled(90, 140));
+    card_bg_ind = index;
+
+    update();
 }
 
 void Game::countPoints(const int it, const QString checkPerson)
@@ -258,32 +290,35 @@ void Game::countPoints(const int it, const QString checkPerson)
     {
         count += 9;
     }
-    else if((it >= 32) and (it < 50))
+    else if((it >= 32) and (it < 48))
     {
         count += 10;
     }
     else
     {
-        if(checkPerson == "Person"){
-            if(peopleCountPoints <= 11)
+        if(checkPerson == "People"){
+            if(peopleCountPoints <= 10)
             {
-                count += 10;
+                count += 11;
+                peopleEleven.append(11);
             }
             else
             {
                 count += 1;
             }
         }
-        else{
-            if(computerCountPoints <= 11)
+        else if(checkPerson == "Computer")
+        {
+            if(computerCountPoints <= 10)
             {
-                count += 10;
+                count += 11;
+                computerEleven.append(11);
             }
             else
             {
                 count += 1;
             }
-        }
+        }  
     }
 
     if(checkPerson == "People")
@@ -294,11 +329,39 @@ void Game::countPoints(const int it, const QString checkPerson)
     {
         computerCountPoints += count;
     }
+
+    if(peopleCountPoints > 21)
+    {
+        if(peopleEleven.size() != 0)
+        {
+            while((peopleEleven.size() > 0) or (peopleCountPoints > 21))
+            {
+                peopleCountPoints -= 10;
+                peopleEleven.remove(0, 1);
+            }
+        }
+    }
+
+    if(computerCountPoints > 21)
+    {
+        if(computerEleven.size() != 0)
+        {
+            while((computerEleven.size() > 0) or (computerCountPoints > 21))
+            {
+                computerCountPoints -= 10;
+                computerEleven.remove(0, 1);
+            }
+        }
+    }
 }
 
 void Game::on_startButton_clicked()
 {
+    clickSound.play();
+
     game_state_button_clicked = true;
+    game_finished = false;
+    game_result = GameResult::None;
 
     temp_pCARDS_POS_X = pCARDS_POS_X;
     temp_cCARDS_POS_X = cCARDS_POS_X;
@@ -306,6 +369,10 @@ void Game::on_startButton_clicked()
     Player::setCardsDeck(cardsDeck);
 
     temp_cardsDeck.clear();
+    temp_peopleCardsDeck.clear();
+    temp_computerCardsDeck.clear();
+    peopleCardsCoords.clear();
+    computerCardsCoords.clear();
 
     for(auto el : cardsDeck)
     {
@@ -318,8 +385,6 @@ void Game::on_startButton_clicked()
         temp_pCARDS_POS_X += 15;
 
         peopleCardsCoords.append(QPair<int, int>(temp_pCARDS_POS_X, CARDS_POS_Y));
-        pPrimaryPos.append(QPair<int, int>(0, 0));
-        cPrimaryPos.append(QPair<int, int>(0, 0));
 
         temp_peopleCardsDeck.append(temp_cardsDeck[ind]);
         countPoints(ind, "People");
@@ -340,17 +405,34 @@ void Game::on_startButton_clicked()
     ui->hitButton->setEnabled(true);
     ui->standButton->setEnabled(true);
 
-    ui->betButton->setText(QString::number(peopleCountPoints));
-    ui->startButton->setText(QString::number(computerCountPoints));
-
     ui->peoplePoints->setVisible(true);
     ui->peoplePoints->setText(QString::number(peopleCountPoints));
+
+    peoplePoints->setPoints(peopleCountPoints);
+    computerPoints->setPoints(computerCountPoints);
+
+    if((peoplePoints == computerPoints) and peoplePoints->checkBlackJack())
+    {
+        game_result = GameResult::Draw;
+    }
+    else if(peoplePoints->checkBlackJack())
+    {
+        game_result = GameResult::PeopleVictory;
+    }
+    else if(computerPoints->checkBlackJack())
+    {
+        game_result = GameResult::ComputerVictory;
+    }
+
+    checkGameResult();
 
     update();
 }
 
 void Game::on_hitButton_clicked()
 {
+    clickSound.play();
+
     game_state_button_clicked = true;
 
     People* people = new People();
@@ -360,12 +442,116 @@ void Game::on_hitButton_clicked()
     temp_pCARDS_POS_X += 15;
 
     peopleCardsCoords.append(QPair<int, int>(temp_pCARDS_POS_X, CARDS_POS_Y));
+
     countPoints(people->getIndex(), "People");
+
     temp_peopleCardsDeck.append(*people->getCard());
 
     ui->peoplePoints->setText(QString::number(peopleCountPoints));
 
+    peoplePoints->setPoints(peopleCountPoints);
+    computerPoints->setPoints(computerCountPoints);
+
+    checkGameResult();
+
     repaint();
+}
+
+void Game::on_standButton_clicked()
+{
+    clickSound.play();
+
+    while(computerCountPoints < 17)
+    {
+        computer->hitCard();
+
+        temp_cCARDS_POS_X += 15;
+
+        computerCardsCoords.append(QPair<int, int>(temp_cCARDS_POS_X, CARDS_POS_Y));
+        countPoints(computer->getIndex(), "Computer");
+        temp_computerCardsDeck.append(*computer->getCard());
+    }
+
+    ui->peoplePoints->setText(QString::number(peopleCountPoints));
+
+    peoplePoints->setPoints(peopleCountPoints);
+    computerPoints->setPoints(computerCountPoints);
+
+    if(peoplePoints->checkPoints() and computerPoints->checkPoints())
+    {
+        if(peoplePoints->getPoints() == computerPoints->getPoints())
+        {
+            game_result = GameResult::Draw;
+        }
+        else if(peoplePoints->getPoints() < computerPoints->getPoints())
+        {
+            game_result = GameResult::PeopleVictory;
+        }
+        else if(peoplePoints->getPoints() > computerPoints->getPoints())
+        {
+            game_result = GameResult::ComputerVictory;
+        }
+    }
+    else if(!peoplePoints->checkPoints() and !computerPoints->checkPoints())
+    {
+        if(peoplePoints->getPoints() == computerPoints->getPoints())
+        {
+            game_result = GameResult::Draw;
+        }
+        else if(peoplePoints->getPoints() < computerPoints->getPoints())
+        {
+            game_result = GameResult::ComputerVictory;
+        }
+        else if(peoplePoints->getPoints() > computerPoints->getPoints())
+        {
+            game_result = GameResult::PeopleVictory;
+        }
+    }
+    else
+    {
+        if(peoplePoints->getPoints() < computerPoints->getPoints())
+        {
+            game_result = GameResult::PeopleVictory;
+        }
+        else if(peoplePoints->getPoints() > computerPoints->getPoints())
+        {
+            game_result = GameResult::ComputerVictory;
+        }
+    }
+
+    ui->computerPoints->setText(QString::number(computerPoints->getPoints()));
+    ui->hitButton->setEnabled(false);
+
+    update();
+
+    checkGameResult();
+}
+
+void Game::checkGameResult()
+{
+    switch(game_result)
+    {
+    case GameResult::Draw:
+        QMessageBox::information(this, "Draw", "Draw!");
+
+        BUDGET += temp_bet;
+        ui->pocketLineEdit->setText(QString::number(BUDGET) + "$");
+
+        restartGame();
+        break;
+    case GameResult::PeopleVictory:
+        QMessageBox::information(this, "PeopleVictory", "You won!");
+
+        BUDGET += temp_bet * 2;
+        ui->pocketLineEdit->setText(QString::number(BUDGET) + "$");
+
+        restartGame();
+        break;
+    case GameResult::ComputerVictory:
+        QMessageBox::information(this, "ComputerVictory", "You lost!");
+        restartGame();
+        break;
+    }
 }
 
 void Game::paintEvent(QPaintEvent* event)
@@ -382,17 +568,42 @@ void Game::paintEvent(QPaintEvent* event)
 
         for(cards_computer_iter = 0; cards_computer_iter < temp_computerCardsDeck.size(); cards_computer_iter++)
         {
-            painter.drawPixmap(computerCardsCoords[cards_computer_iter].first, computerCardsCoords[cards_computer_iter].second, QPixmap(temp_computerCardsDeck[cards_computer_iter]).scaled(52, 88));
+            if(!game_finished)
+            {
+                if(cards_computer_iter > 0){
+                    painter.drawPixmap(computerCardsCoords[cards_computer_iter].first, computerCardsCoords[cards_computer_iter].second, QPixmap(temp_computerCardsDeck[cards_computer_iter]).scaled(52, 88));
+                }
+                else
+                {
+                    painter.drawPixmap(computerCardsCoords[cards_computer_iter].first, computerCardsCoords[cards_computer_iter].second, QPixmap(QDir::currentPath() + "/images/backCardsView/" + cardsBackgroundList[card_bg_ind]).scaled(52, 88));
+                }
+            }
+            else{
+                painter.drawPixmap(computerCardsCoords[cards_computer_iter].first, computerCardsCoords[cards_computer_iter].second, QPixmap(temp_computerCardsDeck[cards_computer_iter]).scaled(52, 88));
+            }
         }
     }
 }
 
-void Game::timerEvent(QTimerEvent *event)
+void Game::restartGame()
 {
-    Q_UNUSED(event);
+    ui->hitButton->setEnabled(false);
+    ui->standButton->setEnabled(false);
+    ui->betButton->setEnabled(true);
+    ui->incrementButton->setEnabled(true);
+    ui->decrementButton->setEnabled(true);
+    ui->chooseBetButton->setEnabled(true);
+    ui->computerPoints->setVisible(true);
+    game_finished = true;
+
+    update();
 }
 
-int Game::temp_pCARDS_POS_X = NULL;
-int Game::temp_cCARDS_POS_X = NULL;
+int Game::getPeoplePoints() { return peopleCountPoints; }
+
+int Game::getComputerPoints() { return computerCountPoints; }
+
+int Game::peopleCountPoints = 0;
+int Game::computerCountPoints = 0;
 int Game::BUDGET = 1000;
 int Game::BET = 0;
