@@ -11,10 +11,12 @@
 #include <thread>
 #include <QSoundEffect>
 #include <QUrl>
+#include <QSharedPointer>
 
 #include "bet.h"
 #include "player.h"
 #include "computepoints.h"
+#include "mainmenu.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Game; }
@@ -60,6 +62,8 @@ private slots:
 
     void on_standButton_clicked();
 
+    void on_backToMenuButton_clicked();
+
 private:
     Ui::Game *ui;
 
@@ -103,13 +107,14 @@ private:
     QList<QPair<int, int>> computerCardsCoords;
 
     QSoundEffect clickSound;
+    QSharedPointer<QSoundEffect> backgroundMusic;
 
-    Bet* betWindow;
+    QSharedPointer<Bet> betWindow;
 
-    Computer* computer;
+    QSharedPointer<Computer> computer;
 
-    ComputePoints* peoplePoints;
-    ComputePoints* computerPoints;
+    QSharedPointer<ComputePoints> peoplePoints;
+    QSharedPointer<ComputePoints> computerPoints;
 
     int x = 0, y = 0;
 

@@ -46,6 +46,8 @@ void People::stand() {}
 
 Computer::Computer() {}
 
+Computer::~Computer() {}
+
 QPixmap* Computer::getCard() { return card; }
 
 int Computer::getIndex() { return ind; }

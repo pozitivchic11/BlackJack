@@ -5,13 +5,21 @@ Game::Game(QWidget *parent) : QWidget(parent), ui(new Ui::Game)
 {
     ui->setupUi(this);
 
+    backgroundMusic = QSharedPointer<QSoundEffect>(new QSoundEffect);
+
     clickSound.setSource(QUrl::fromLocalFile(QDir::currentPath() + "/sounds/game_buttons_click.wav"));
     clickSound.setVolume(static_cast<float>(0.9));
 
-    computer = new Computer();
+    backgroundMusic->setSource(QUrl::fromLocalFile(QDir::currentPath() + "/sounds/background_music.wav"));
+    backgroundMusic->setVolume(static_cast<float>(0.02));
+    backgroundMusic->setLoopCount(QSoundEffect::Infinite);
 
-    peoplePoints = new ComputePoints();
-    computerPoints = new ComputePoints();
+    backgroundMusic->play();
+
+    computer =  QSharedPointer<Computer>(new Computer);
+
+    peoplePoints = QSharedPointer<ComputePoints>(new ComputePoints);
+    computerPoints = QSharedPointer<ComputePoints>(new ComputePoints);
 
     ui->pocketLineEdit->setEnabled(false);
     ui->startButton->setEnabled(false);
@@ -28,7 +36,7 @@ Game::Game(QWidget *parent) : QWidget(parent), ui(new Ui::Game)
 
     ui->chooseCard->setCurrentIndex(1);
 
-    betWindow = new Bet();
+    betWindow = QSharedPointer<Bet>(new Bet);
 
     QPixmap pixmap_background(QDir::currentPath() + "/images/blackjack_table.jpg");
     QPalette palette;
@@ -122,6 +130,7 @@ void Game::on_betButton_clicked()
     clickSound.play();
 
     ui->peoplePoints->setVisible(false);
+    ui->computerPoints->setVisible(false);
 
     peopleCountPoints = 0;
     computerCountPoints = 0;
@@ -152,7 +161,6 @@ void Game::on_betButton_clicked()
             ui->chooseBetButton->setEnabled(false);
             ui->incrementButton->setEnabled(false);
             ui->decrementButton->setEnabled(false);
-            ui->computerPoints->setVisible(false);
             ui->startButton->setEnabled(true);
         }
         else {
@@ -548,8 +556,27 @@ void Game::checkGameResult()
         restartGame();
         break;
     case GameResult::ComputerVictory:
-        QMessageBox::information(this, "ComputerVictory", "You lost!");
-        restartGame();
+        if(BUDGET == 0)
+        {
+            QMessageBox::information(this, "Money", "You`re lost all your money!");
+
+            MainMenu mainWin;
+
+            this->close();
+            backgroundMusic->stop();
+
+            BUDGET = 1000;
+
+            mainWin.setModal(true);
+
+            restartGame();
+            mainWin.exec();
+        }
+        else
+        {
+            QMessageBox::information(this, "ComputerVictory", "You lost!");
+            restartGame();
+        }
         break;
     }
 }
@@ -597,6 +624,22 @@ void Game::restartGame()
     game_finished = true;
 
     update();
+}
+
+void Game::on_backToMenuButton_clicked()
+{
+    QMessageBox::StandardButton reply = QMessageBox::question(this, "QuitButton", "Are you sure you wanna quit? All changes will be saved!", QMessageBox::Yes | QMessageBox::No);
+
+    if(reply == QMessageBox::Yes)
+    {
+        MainMenu mainWin;
+
+        this->hide();
+        backgroundMusic->stop();
+
+        mainWin.setModal(true);
+        mainWin.exec();
+    }
 }
 
 int Game::getPeoplePoints() { return peopleCountPoints; }

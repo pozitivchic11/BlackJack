@@ -50,6 +50,8 @@ public:
         if (Game->objectName().isEmpty())
             Game->setObjectName("Game");
         Game->resize(800, 500);
+        Game->setMinimumSize(QSize(800, 500));
+        Game->setMaximumSize(QSize(800, 500));
         Game->setAutoFillBackground(false);
         gameLabel = new QLabel(Game);
         gameLabel->setObjectName("gameLabel");

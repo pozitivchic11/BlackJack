@@ -13,17 +13,20 @@ SOURCES += \
     computepoints.cpp \
     main.cpp \
     game.cpp \
+    mainmenu.cpp \
     player.cpp
 
 HEADERS += \
     bet.h \
     computepoints.h \
     game.h \
+    mainmenu.h \
     player.h
 
 FORMS += \
     betwindow.ui \
-    gamewindow.ui
+    gamewindow.ui \
+    mainmenu.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

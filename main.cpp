@@ -1,13 +1,13 @@
 #include <QApplication>
 
-#include "game.h"
+#include "mainmenu.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    MainMenu menu;
 
-    Game w;
-    w.show();
+    menu.show();
 
     return a.exec();
 }
